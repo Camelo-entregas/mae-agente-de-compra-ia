@@ -1,0 +1,65 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const produtosContainer = document.getElementById('produtos-container');
+    const formProduto = document.getElementById('form-produto');
+    
+    // Array para armazenar os produtos (você pode substituir por um banco de dados depois)
+    let produtos = [];
+    
+    // Função para carregar produtos salvos no localStorage
+    function carregarProdutos() {
+        const produtosSalvos = localStorage.getItem('produtos');
+        if (produtosSalvos) {
+            produtos = JSON.parse(produtosSalvos);
+            renderizarProdutos();
+        }
+    }
+    
+    // Função para renderizar os produtos na tela
+    function renderizarProdutos() {
+        produtosContainer.innerHTML = '';
+        
+        produtos.forEach(produto => {
+            const produtoCard = document.createElement('div');
+            produtoCard.className = 'produto-card';
+            
+            produtoCard.innerHTML = `
+                <img src="${produto.imagem}" alt="${produto.nome}" class="produto-imagem">
+                <div class="produto-info">
+                    <h3>${produto.nome}</h3>
+                    ${produto.preco ? `<p class="produto-preco">${produto.preco}</p>` : ''}
+                    <a href="${produto.link}" target="_blank" class="produto-link">Comprar Agora</a>
+                </div>
+            `;
+            
+            produtosContainer.appendChild(produtoCard);
+        });
+    }
+    
+    // Adicionar novo produto
+    formProduto.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const nome = document.getElementById('nome').value;
+        const imagem = document.getElementById('imagem').value;
+        const link = document.getElementById('link').value;
+        const preco = document.getElementById('preco').value;
+        
+        const novoProduto = {
+            nome,
+            imagem,
+            link,
+            preco: preco ? `R$ ${preco}` : null
+        };
+        
+        produtos.push(novoProduto);
+        localStorage.setItem('produtos', JSON.stringify(produtos));
+        
+        renderizarProdutos();
+        formProduto.reset();
+        
+        alert('Produto adicionado com sucesso!');
+    });
+    
+    // Carregar produtos ao iniciar
+    carregarProdutos();
+});

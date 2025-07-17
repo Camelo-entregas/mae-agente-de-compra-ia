@@ -1,4 +1,262 @@
-document.addEventListener('DOMContentLoaded', function() {
-    alert("O JavaScript está funcionando!"); // Teste simples
-    console.log("Script carregado!"); // Verifique no console (F12)
-});
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mãe, Sua Agente de Compras com IA</title>
+    <style>
+        /* Estilos CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .produto-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            padding: 15px;
+        }
+
+        .produto-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .produto-imagem {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .produto-info {
+            padding: 1rem 0;
+        }
+
+        .produto-info h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .produto-link {
+            display: inline-block;
+            background-color: #ff6b6b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .produto-link:hover {
+            background-color: #ff5252;
+        }
+
+        .adicionar-produto {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #ff6b6b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #ff5252;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .produtos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Mãe, Sua Agente de Compras com IA</h1>
+            <p>Encontramos os melhores produtos para você!</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="produtos">
+            <h2>Nossas Recomendações</h2>
+            <div class="produtos-grid" id="produtos-container">
+                <!-- Produtos serão inseridos aqui via JavaScript -->
+            </div>
+        </section>
+
+        <section class="adicionar-produto">
+            <h2>Adicionar Novo Produto</h2>
+            <form id="form-produto">
+                <div class="form-group">
+                    <label for="nome">Nome do Produto:</label>
+                    <input type="text" id="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="imagem">URL da Imagem:</label>
+                    <input type="text" id="imagem" placeholder="https://exemplo.com/imagem.jpg" required>
+                </div>
+                <div class="form-group">
+                    <label for="link">Link de Afiliado:</label>
+                    <input type="text" id="link" placeholder="https://exemplo.com/produto" required>
+                </div>
+                <div class="form-group">
+                    <label for="preco">Preço (opcional):</label>
+                    <input type="text" id="preco" placeholder="99.90">
+                </div>
+                <button type="submit" class="btn">Adicionar Produto</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="ano-atual"></span> Mãe, Sua Agente de Compras com IA. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript corrigido e simplificado
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página carregada - sistema pronto');
+            
+            // Elementos DOM
+            const produtosContainer = document.getElementById('produtos-container');
+            const formProduto = document.getElementById('form-produto');
+            const anoAtual = document.getElementById('ano-atual');
+            
+            // Atualiza o ano no footer
+            anoAtual.textContent = new Date().getFullYear();
+            
+            // Carrega produtos do localStorage
+            function carregarProdutos() {
+                const produtosSalvos = localStorage.getItem('produtosMaeIA');
+                if (produtosSalvos) {
+                    try {
+                        const produtos = JSON.parse(produtosSalvos);
+                        produtosContainer.innerHTML = produtos.map(produto => `
+                            <div class="produto-card">
+                                <img src="${produto.imagem}" alt="${produto.nome}" class="produto-imagem">
+                                <div class="produto-info">
+                                    <h3>${produto.nome}</h3>
+                                    ${produto.preco ? `<p class="produto-preco">R$ ${produto.preco}</p>` : ''}
+                                    <a href="${produto.link}" target="_blank" class="produto-link">Comprar Agora</a>
+                                </div>
+                            </div>
+                        `).join('');
+                    } catch (e) {
+                        console.error('Erro ao carregar produtos:', e);
+                    }
+                }
+            }
+            
+            // Adiciona novo produto
+            formProduto.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const novoProduto = {
+                    nome: document.getElementById('nome').value,
+                    imagem: document.getElementById('imagem').value,
+                    link: document.getElementById('link').value,
+                    preco: document.getElementById('preco').value
+                };
+                
+                // Recupera ou inicializa array de produtos
+                const produtosSalvos = localStorage.getItem('produtosMaeIA');
+                const produtos = produtosSalvos ? JSON.parse(produtosSalvos) : [];
+                produtos.push(novoProduto);
+                
+                // Salva no localStorage
+                localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                
+                // Recarrega a exibição
+                carregarProdutos();
+                formProduto.reset();
+                
+                alert('Produto adicionado com sucesso! Verifique no F12 > Application > Local Storage.');
+            });
+            
+            // Carrega os produtos ao iniciar
+            carregarProdutos();
+        });
+    </script>
+</body>
+</html>

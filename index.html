@@ -37,7 +37,172 @@
             align-items: center;
         }
         
-        /* ... (mantenha todo o restante do CSS igual ao código anterior) ... */
+        .logo {
+            max-width: 150px;
+            margin-bottom: 1rem;
+        }
+        
+        .titulo-principal {
+            font-family: 'Georgia', serif;
+            font-size: 3.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .slogan {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin: 1rem 0 2rem;
+        }
+        
+        .redes-sociais {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .redes-sociais a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        
+        .redes-sociais a:hover {
+            transform: scale(1.2);
+            color: var(--cor-secundaria);
+        }
+        
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 2rem;
+            line-height: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .oferta-dia {
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 2rem auto;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .produto-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .produto-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .produto-destaque {
+            border: 3px solid var(--cor-primaria);
+            position: relative;
+        }
+        
+        .produto-destaque::after {
+            content: "⭐ OFERTA DO DIA ⭐";
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .produto-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .produto-info {
+            padding: 1.5rem;
+        }
+        
+        .produto-preco {
+            color: var(--cor-primaria);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+        
+        .comprar-btn {
+            display: inline-block;
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .comprar-btn:hover {
+            background-color: #c1121f;
+        }
+        
+        .rodape {
+            background-color: #333;
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+        
+        .servico-item {
+            display: inline-block;
+            width: 200px;
+            margin: 1rem;
+            vertical-align: top;
+        }
+        
+        .servico-item i {
+            font-size: 2rem;
+            color: var(--cor-secundaria);
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -48,13 +213,107 @@
             <a href="https://www.tiktok.com/@paulootavio272?_t=ZM-8y8F9efYCRC&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
         </div>
         
-        <h1 class="titulo-principal">𝓜𝓐𝓔 — 𝓢𝓾𝓪 𝓐𝓰𝓮𝓷𝓽𝓮 𝓭𝓮 𝓒𝓸𝓶𝓹𝓻𝓪𝓼 𝓬𝓸𝓶 𝓘𝓐</h1>
+        <img src="https://i.ibb.co/0jQY4Xk/mae-ia-capa.jpg" alt="Mãe IA" class="logo">
+        <h1 class="titulo-principal">𝓜𝓐𝓔 — 𝓢𝓾𝓪 𝓐𝓰𝓮𝓷𝓽𝓮 𝓭𝓮 𝓒𝓸𝓶𝓹𝓻𝓪𝓼 𝓬𝓸𝓶 𝓘�</h1>
         <p class="slogan">A compra que você precisa, com o cuidado que só uma mãe tem.</p>
         
         <div class="oferta-dia" id="btn-oferta-dia">⭐ Oferta do Dia ⭐</div>
     </header>
 
-    <!-- ... (mantenha todo o restante do HTML e JavaScript igual ao código anterior) ... -->
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Nossas Recomendações</h2>
+        
+        <div class="produtos-grid" id="produtos-container">
+            <!-- Produtos carregados via JavaScript -->
+        </div>
+    </main>
 
+    <!-- Rodapé -->
+    <footer class="rodape">
+        <h2>🛍️ O que a Mãe IA faz por você?</h2>
+        <p style="max-width: 800px; margin: 0 auto 2rem;">Compra por você, como uma mãe faria: com carinho, cuidado e inteligência.<br>
+        Deixe que a IA analise, compare e encontre os melhores produtos e preços pra você!</p>
+        
+        <div>
+            <div class="servico-item">
+                <i class="fas fa-search"></i>
+                <h3>Pesquisa inteligente</h3>
+                <p>Diga o que precisa. A Mãe IA vasculha dezenas de sites e encontra a melhor opção.</p>
+            </div>
+            
+            <div class="servico-item">
+                <i class="fas fa-comments"></i>
+                <h3>Atendimento personalizado</h3>
+                <p>Você fala com a IA como se fosse sua mãe mesmo - simpática e direta.</p>
+            </div>
+            
+            <div class="servico-item">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Garantia e segurança</h3>
+                <p>A Mãe confere tudo. Pagamentos seguros e vendedores confiáveis.</p>
+            </div>
+            
+            <div class="servico-item">
+                <i class="fas fa-rocket"></i>
+                <h3>Compra sem esforço</h3>
+                <p>Você só diz o que quer. Ela compra, paga e acompanha o pedido.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão Flutuante do WhatsApp -->
+    <a href="https://wa.me/message/5WUV53TMK6BJA1" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const produtosContainer = document.getElementById('produtos-container');
+            const btnOfertaDia = document.getElementById('btn-oferta-dia');
+            
+            // Carrega produtos do localStorage
+            function carregarProdutos() {
+                const produtosSalvos = localStorage.getItem('produtosMaeIA');
+                if (produtosSalvos) {
+                    const produtos = JSON.parse(produtosSalvos);
+                    
+                    // Verifica se há oferta do dia
+                    const ofertaDia = produtos.find(p => p.destaque);
+                    if (ofertaDia) {
+                        btnOfertaDia.innerHTML = `⭐ OFERTA: ${ofertaDia.nome} ⭐`;
+                    }
+                    
+                    // Renderiza todos os produtos
+                    produtosContainer.innerHTML = produtos.map(produto => `
+                        <div class="produto-card ${produto.destaque ? 'produto-destaque' : ''}">
+                            <img src="${produto.imagem}" alt="${produto.nome}" class="produto-img">
+                            <div class="produto-info">
+                                <h3>${produto.nome}</h3>
+                                <p class="produto-preco">R$ ${produto.preco || '--'}</p>
+                                <a href="${produto.link}" target="_blank" class="comprar-btn">Comprar Agora</a>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    produtosContainer.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Nenhum produto disponível no momento.</p>';
+                }
+            }
+            
+            // Botão oferta do dia
+            btnOfertaDia.addEventListener('click', function() {
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                const ofertaDia = produtos.find(p => p.destaque);
+                
+                if (ofertaDia) {
+                    window.location.href = ofertaDia.link;
+                } else {
+                    alert('Nenhuma oferta do dia selecionada ainda!');
+                }
+            });
+            
+            carregarProdutos();
+        });
+    </script>
 </body>
 </html>

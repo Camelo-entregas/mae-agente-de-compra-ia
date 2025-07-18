@@ -111,6 +111,88 @@
             100% { transform: scale(1); }
         }
         
+        /* Seção Destaque Principal */
+        .destaque-principal-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .destaque-principal {
+            background: linear-gradient(135deg, #fff8e1 0%, #fff1c1 100%);
+            border: 3px solid var(--cor-primaria);
+            border-radius: 15px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .destaque-imagem {
+            flex: 1;
+            max-width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .destaque-imagem img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s;
+        }
+        
+        .destaque-imagem:hover img {
+            transform: scale(1.05);
+        }
+        
+        .destaque-info {
+            flex: 2;
+        }
+        
+        .destaque-tag {
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .destaque-titulo {
+            font-size: 2rem;
+            margin: 0 0 1rem;
+            color: var(--cor-primaria);
+        }
+        
+        .destaque-preco {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e63946;
+            margin: 1rem 0;
+        }
+        
+        .destaque-btn {
+            display: inline-block;
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .destaque-btn:hover {
+            background-color: #c1121f;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
+        }
+        
         /* Conteúdo Principal */
         .container {
             max-width: 1200px;
@@ -142,7 +224,7 @@
         }
         
         .produto-destaque::after {
-            content: "⭐ OFERTA DO DIA ⭐";
+            content: "⭐ OFERTA ⭐";
             position: absolute;
             top: 10px;
             left: 0;
@@ -263,6 +345,11 @@
         <div class="oferta-dia" id="btn-oferta-dia">⭐ Oferta do Dia ⭐</div>
     </header>
 
+    <!-- Seção Destaque Principal -->
+    <div class="destaque-principal-container" id="destaque-principal-container">
+        <!-- Será preenchido pelo JavaScript -->
+    </div>
+
     <!-- Conteúdo Principal (Clientes) -->
     <main class="container">
         <h2 style="text-align: center; margin-bottom: 2rem;">Nossas Recomendações</h2>
@@ -295,7 +382,13 @@
             <div class="form-group">
                 <label>
                     <input type="checkbox" id="destaque">
-                    <strong>Marcar como Destaque do Dia</strong>
+                    <strong>Marcar como Destaque (Oferta)</strong>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="destaque-principal">
+                    <strong>Marcar como Destaque Principal</strong>
                 </label>
             </div>
             <button type="submit" style="background: var(--cor-primaria); color: white; padding: 1rem; border: none; border-radius: 5px; cursor: pointer; width: 100%;">Adicionar Produto</button>
@@ -349,6 +442,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Elementos
             const produtosContainer = document.getElementById('produtos-container');
+            const destaquePrincipalContainer = document.getElementById('destaque-principal-container');
             const btnOfertaDia = document.getElementById('btn-oferta-dia');
             const adminPanel = document.getElementById('admin-panel');
             const toggleAdminBtn = document.getElementById('toggle-admin');
@@ -360,21 +454,45 @@
             
             // Função para carregar produtos
             function carregarProdutos() {
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+                const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
                 
-                // Atualiza a view do cliente
-                const ofertaDia = produtos.find(p => p.destaque);
-                if (ofertaDia) {
-                    btnOfertaDia.innerHTML = `⭐ OFERTA: ${ofertaDia.nome.substring(0, 20)}${ofertaDia.nome.length > 20 ? '...' : ''} ⭐`;
-                    btnOfertaDia.onclick = () => window.location.href = ofertaDia.link;
+                // Atualiza o destaque principal
+                if (destaquePrincipal) {
+                    const produtoDestaque = produtos[destaquePrincipal.index];
+                    if (produtoDestaque) {
+                        destaquePrincipalContainer.innerHTML = `
+                            <div class="destaque-principal">
+                                <div class="destaque-imagem">
+                                    <img src="${produtoDestaque.imagem}" alt="${produtoDestaque.nome}">
+                                </div>
+                                <div class="destaque-info">
+                                    <span class="destaque-tag">⭐ OFERTA DO DIA ⭐</span>
+                                    <h2 class="destaque-titulo">${produtoDestaque.nome}</h2>
+                                    <p>${produtoDestaque.descricao || 'A melhor oferta selecionada especialmente para você!'}</p>
+                                    <div class="destaque-preco">${produtoDestaque.preco ? 'R$ ' + produtoDestaque.preco : 'Preço especial'}</div>
+                                    <a href="${produtoDestaque.link}" target="_blank" class="destaque-btn">COMPRAR AGORA</a>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Atualiza o botão de oferta do dia
+                        btnOfertaDia.innerHTML = `⭐ OFERTA: ${produtoDestaque.nome.substring(0, 20)}${produtoDestaque.nome.length > 20 ? '...' : ''} ⭐`;
+                        btnOfertaDia.onclick = () => window.location.href = produtoDestaque.link;
+                    }
+                } else {
+                    destaquePrincipalContainer.innerHTML = '';
+                    btnOfertaDia.innerHTML = '⭐ Oferta do Dia ⭐';
+                    btnOfertaDia.onclick = null;
                 }
                 
+                // Atualiza a lista de produtos
                 produtosContainer.innerHTML = produtos.map(produto => `
                     <div class="produto-card ${produto.destaque ? 'produto-destaque' : ''}">
                         <img src="${produto.imagem}" alt="${produto.nome}" class="produto-img">
                         <div class="produto-info">
                             <h3>${produto.nome}</h3>
-                            <p class="produto-preco">R$ ${produto.preco || '--'}</p>
+                            <p class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Preço sob consulta'}</p>
                             <a href="${produto.link}" target="_blank" class="comprar-btn">Comprar Agora</a>
                         </div>
                     </div>
@@ -382,24 +500,59 @@
                 
                 // Atualiza a view do admin
                 if (isAdmin) {
-                    adminProdutosContainer.innerHTML = produtos.map(produto => `
+                    adminProdutosContainer.innerHTML = produtos.map((produto, index) => `
                         <div style="border: 1px solid #eee; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; position: relative;">
                             ${produto.destaque ? '<span style="background: var(--cor-primaria); color: white; padding: 2px 5px; border-radius: 3px; position: absolute; top: 10px; right: 10px;">DESTAQUE</span>' : ''}
+                            ${destaquePrincipal && destaquePrincipal.index === index ? '<span style="background: #2a9d8f; color: white; padding: 2px 5px; border-radius: 3px; position: absolute; top: 10px; right: 120px;">PRINCIPAL</span>' : ''}
                             <h4>${produto.nome}</h4>
-                            <p>Preço: R$ ${produto.preco || '--'}</p>
+                            <p>Preço: ${produto.preco ? 'R$ ' + produto.preco : '--'}</p>
                             <img src="${produto.imagem}" style="max-width: 150px; display: block; margin: 5px 0;">
-                            <button onclick="removerProduto('${produto.nome}')" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; margin-top: 5px; cursor: pointer;">Remover</button>
+                            <div style="margin-top: 10px;">
+                                <button onclick="definirComoDestaquePrincipal(${index})" style="background: #2a9d8f; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-right: 5px;">
+                                    ${destaquePrincipal && destaquePrincipal.index === index ? 'Remover Principal' : 'Tornar Principal'}
+                                </button>
+                                <button onclick="removerProduto(${index})" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remover</button>
+                            </div>
                         </div>
                     `).join('');
                 }
             }
             
-            // Função para remover produto (usada no admin)
-            window.removerProduto = function(nome) {
-                if (confirm(`Remover o produto "${nome}"?`)) {
-                    let produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
-                    produtos = produtos.filter(p => p.nome !== nome);
+            // Função para definir produto como destaque principal
+            window.definirComoDestaquePrincipal = function(index) {
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+                const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
+                
+                if (destaquePrincipal && destaquePrincipal.index === index) {
+                    // Se já é o destaque principal, remove
+                    localStorage.removeItem('destaquePrincipalMaeIA');
+                } else {
+                    // Define novo destaque principal
+                    const novoDestaque = {
+                        index: index,
+                        produto: produtos[index]
+                    };
+                    localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify(novoDestaque));
+                }
+                
+                carregarProdutos();
+            };
+            
+            // Função para remover produto
+            window.removerProduto = function(index) {
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+                const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
+                
+                if (confirm(`Remover o produto "${produtos[index].nome}"?`)) {
+                    // Remove o destaque principal se for o produto sendo removido
+                    if (destaquePrincipal && destaquePrincipal.index === index) {
+                        localStorage.removeItem('destaquePrincipalMaeIA');
+                    }
+                    
+                    // Remove o produto
+                    produtos.splice(index, 1);
                     localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                    
                     carregarProdutos();
                 }
             };
@@ -421,13 +574,6 @@
             formProduto.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Remove destaque de outros produtos se este for marcado
-                if (document.getElementById('destaque').checked) {
-                    let produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
-                    produtos.forEach(p => p.destaque = false);
-                    localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
-                }
-                
                 const novoProduto = {
                     nome: document.getElementById('nome').value,
                     imagem: document.getElementById('imagem').value,
@@ -436,9 +582,18 @@
                     destaque: document.getElementById('destaque').checked
                 };
                 
-                let produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
                 produtos.push(novoProduto);
                 localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                
+                // Se marcou como destaque principal
+                if (document.getElementById('destaque-principal').checked) {
+                    const novoDestaque = {
+                        index: produtos.length - 1, // Índice do novo produto
+                        produto: novoProduto
+                    };
+                    localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify(novoDestaque));
+                }
                 
                 alert('Produto adicionado com sucesso!');
                 formProduto.reset();

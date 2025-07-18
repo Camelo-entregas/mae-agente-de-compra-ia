@@ -22,6 +22,7 @@
             line-height: 1.6;
         }
         
+        /* Cabeçalho */
         .header {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://img.freepik.com/fotos-premium/assistente-moderno-de-inteligencia-artificial-nos-negocios-um-otimo-design-para-todos-os-fins_155807-8460.jpg');
             background-size: cover;
@@ -110,6 +111,7 @@
             100% { transform: scale(1); }
         }
         
+        /* Conteúdo Principal */
         .container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -184,6 +186,7 @@
             background-color: #c1121f;
         }
         
+        /* Rodapé */
         .rodape {
             background-color: #333;
             color: white;
@@ -203,10 +206,50 @@
             color: var(--cor-secundaria);
             margin-bottom: 1rem;
         }
+        
+        /* Painel Admin (oculto por padrão) */
+        #admin-panel {
+            display: none;
+            background: white;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .admin-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: #333;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
-    <!-- Cabeçalho com nova imagem -->
+    <!-- Cabeçalho -->
     <header class="header">
         <div class="redes-sociais">
             <a href="https://www.facebook.com/paulo.otavio.779?mibextid=ZbWKwL" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -214,13 +257,13 @@
         </div>
         
         <img src="https://i.ibb.co/0jQY4Xk/mae-ia-capa.jpg" alt="Mãe IA" class="logo">
-        <h1 class="titulo-principal">𝓜𝓐𝓔 — 𝓢𝓾𝓪 𝓐𝓰𝓮𝓷𝓽𝓮 𝓭𝓮 𝓒𝓸𝓶𝓹𝓻𝓪𝓼 𝓬𝓸𝓶 𝓘�</h1>
+        <h1 class="titulo-principal">𝓜𝓐𝓔 — 𝓢𝓾𝓪 𝓐𝓰𝓮𝓷𝓽𝓮 𝓭𝓮 𝓒𝓸𝓶𝓹𝓻𝓪𝓼 𝓬𝓸𝓶 𝓘𝓐</h1>
         <p class="slogan">A compra que você precisa, com o cuidado que só uma mãe tem.</p>
         
         <div class="oferta-dia" id="btn-oferta-dia">⭐ Oferta do Dia ⭐</div>
     </header>
 
-    <!-- Conteúdo Principal -->
+    <!-- Conteúdo Principal (Clientes) -->
     <main class="container">
         <h2 style="text-align: center; margin-bottom: 2rem;">Nossas Recomendações</h2>
         
@@ -228,6 +271,39 @@
             <!-- Produtos carregados via JavaScript -->
         </div>
     </main>
+
+    <!-- Painel Admin (Acesso Restrito) -->
+    <section id="admin-panel">
+        <h2 style="text-align: center; color: var(--cor-primaria);">Painel Administrativo</h2>
+        <form id="form-produto">
+            <div class="form-group">
+                <label for="nome">Nome do Produto:</label>
+                <input type="text" id="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="imagem">URL da Imagem:</label>
+                <input type="text" id="imagem" required>
+            </div>
+            <div class="form-group">
+                <label for="link">Link de Afiliado:</label>
+                <input type="text" id="link" required>
+            </div>
+            <div class="form-group">
+                <label for="preco">Preço:</label>
+                <input type="text" id="preco">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="destaque">
+                    <strong>Marcar como Destaque do Dia</strong>
+                </label>
+            </div>
+            <button type="submit" style="background: var(--cor-primaria); color: white; padding: 1rem; border: none; border-radius: 5px; cursor: pointer; width: 100%;">Adicionar Produto</button>
+        </form>
+        
+        <h3 style="margin-top: 2rem;">Produtos Cadastrados</h3>
+        <div id="admin-produtos-container"></div>
+    </section>
 
     <!-- Rodapé -->
     <footer class="rodape">
@@ -262,56 +338,114 @@
         </div>
     </footer>
 
-    <!-- Botão Flutuante do WhatsApp -->
+    <!-- Botões Flutuantes -->
     <a href="https://wa.me/message/5WUV53TMK6BJA1" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
+    
+    <div class="admin-btn" id="toggle-admin">🔧 Admin</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Elementos
             const produtosContainer = document.getElementById('produtos-container');
             const btnOfertaDia = document.getElementById('btn-oferta-dia');
+            const adminPanel = document.getElementById('admin-panel');
+            const toggleAdminBtn = document.getElementById('toggle-admin');
+            const formProduto = document.getElementById('form-produto');
+            const adminProdutosContainer = document.getElementById('admin-produtos-container');
             
-            // Carrega produtos do localStorage
+            // Variável de controle
+            let isAdmin = false;
+            
+            // Função para carregar produtos
             function carregarProdutos() {
-                const produtosSalvos = localStorage.getItem('produtosMaeIA');
-                if (produtosSalvos) {
-                    const produtos = JSON.parse(produtosSalvos);
-                    
-                    // Verifica se há oferta do dia
-                    const ofertaDia = produtos.find(p => p.destaque);
-                    if (ofertaDia) {
-                        btnOfertaDia.innerHTML = `⭐ OFERTA: ${ofertaDia.nome} ⭐`;
-                    }
-                    
-                    // Renderiza todos os produtos
-                    produtosContainer.innerHTML = produtos.map(produto => `
-                        <div class="produto-card ${produto.destaque ? 'produto-destaque' : ''}">
-                            <img src="${produto.imagem}" alt="${produto.nome}" class="produto-img">
-                            <div class="produto-info">
-                                <h3>${produto.nome}</h3>
-                                <p class="produto-preco">R$ ${produto.preco || '--'}</p>
-                                <a href="${produto.link}" target="_blank" class="comprar-btn">Comprar Agora</a>
-                            </div>
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                
+                // Atualiza a view do cliente
+                const ofertaDia = produtos.find(p => p.destaque);
+                if (ofertaDia) {
+                    btnOfertaDia.innerHTML = `⭐ OFERTA: ${ofertaDia.nome.substring(0, 20)}${ofertaDia.nome.length > 20 ? '...' : ''} ⭐`;
+                    btnOfertaDia.onclick = () => window.location.href = ofertaDia.link;
+                }
+                
+                produtosContainer.innerHTML = produtos.map(produto => `
+                    <div class="produto-card ${produto.destaque ? 'produto-destaque' : ''}">
+                        <img src="${produto.imagem}" alt="${produto.nome}" class="produto-img">
+                        <div class="produto-info">
+                            <h3>${produto.nome}</h3>
+                            <p class="produto-preco">R$ ${produto.preco || '--'}</p>
+                            <a href="${produto.link}" target="_blank" class="comprar-btn">Comprar Agora</a>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Atualiza a view do admin
+                if (isAdmin) {
+                    adminProdutosContainer.innerHTML = produtos.map(produto => `
+                        <div style="border: 1px solid #eee; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; position: relative;">
+                            ${produto.destaque ? '<span style="background: var(--cor-primaria); color: white; padding: 2px 5px; border-radius: 3px; position: absolute; top: 10px; right: 10px;">DESTAQUE</span>' : ''}
+                            <h4>${produto.nome}</h4>
+                            <p>Preço: R$ ${produto.preco || '--'}</p>
+                            <img src="${produto.imagem}" style="max-width: 150px; display: block; margin: 5px 0;">
+                            <button onclick="removerProduto('${produto.nome}')" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; margin-top: 5px; cursor: pointer;">Remover</button>
                         </div>
                     `).join('');
-                } else {
-                    produtosContainer.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Nenhum produto disponível no momento.</p>';
                 }
             }
             
-            // Botão oferta do dia
-            btnOfertaDia.addEventListener('click', function() {
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
-                const ofertaDia = produtos.find(p => p.destaque);
-                
-                if (ofertaDia) {
-                    window.location.href = ofertaDia.link;
+            // Função para remover produto (usada no admin)
+            window.removerProduto = function(nome) {
+                if (confirm(`Remover o produto "${nome}"?`)) {
+                    let produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                    produtos = produtos.filter(p => p.nome !== nome);
+                    localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                    carregarProdutos();
+                }
+            };
+            
+            // Botão de toggle do admin
+            toggleAdminBtn.addEventListener('click', function() {
+                const senha = prompt("Digite a senha de administrador:");
+                if (senha === "SUA_SENHA") { // Troque por uma senha segura
+                    isAdmin = !isAdmin;
+                    adminPanel.style.display = isAdmin ? 'block' : 'none';
+                    toggleAdminBtn.textContent = isAdmin ? '👁️ Ocultar Admin' : '🔧 Admin';
+                    if (isAdmin) carregarProdutos();
                 } else {
-                    alert('Nenhuma oferta do dia selecionada ainda!');
+                    alert("Senha incorreta!");
                 }
             });
             
+            // Formulário de adicionar produto
+            formProduto.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Remove destaque de outros produtos se este for marcado
+                if (document.getElementById('destaque').checked) {
+                    let produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                    produtos.forEach(p => p.destaque = false);
+                    localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                }
+                
+                const novoProduto = {
+                    nome: document.getElementById('nome').value,
+                    imagem: document.getElementById('imagem').value,
+                    link: document.getElementById('link').value,
+                    preco: document.getElementById('preco').value,
+                    destaque: document.getElementById('destaque').checked
+                };
+                
+                let produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                produtos.push(novoProduto);
+                localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                
+                alert('Produto adicionado com sucesso!');
+                formProduto.reset();
+                carregarProdutos();
+            });
+            
+            // Carrega os produtos ao iniciar
             carregarProdutos();
         });
     </script>

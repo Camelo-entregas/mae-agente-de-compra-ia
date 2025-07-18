@@ -29,6 +29,17 @@
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 5px;
+            position: relative;
+        }
+        .destaque-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e63946;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
         }
         .form-group {
             margin-bottom: 15px;
@@ -37,6 +48,9 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+        }
+        input[type="text"], input[type="checkbox"] {
+            margin-bottom: 5px;
         }
         input[type="text"] {
             width: 100%;
@@ -51,6 +65,10 @@
             padding: 10px 15px;
             border-radius: 4px;
             cursor: pointer;
+            margin-right: 10px;
+        }
+        .acoes-produto {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -78,8 +96,13 @@
                 <input type="text" id="link" required>
             </div>
             <div class="form-group">
-                <label for="preco">Preço (opicional):</label>
+                <label for="preco">Preço (opcional):</label>
                 <input type="text" id="preco">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="destaque"> Produto em Destaque
+                </label>
             </div>
             <button type="submit">Adicionar Produto</button>
         </form>
@@ -92,14 +115,42 @@
 
             function carregarProdutos() {
                 const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
-                produtosContainer.innerHTML = produtos.map(produto => `
+                produtosContainer.innerHTML = produtos.map((produto, index) => `
                     <div class="produto-card">
+                        ${produto.destaque ? '<span class="destaque-tag">Destaque</span>' : ''}
                         <h3>${produto.nome}</h3>
                         <p>Preço: ${produto.preco || 'Não informado'}</p>
                         <img src="${produto.imagem}" style="max-width: 200px;">
+                        <div class="acoes-produto">
+                            <button onclick="marcarComoDestaque(${index}, ${!produto.destaque})">
+                                ${produto.destaque ? 'Remover Destaque' : 'Tornar Destaque'}
+                            </button>
+                            <button onclick="removerProduto(${index})" style="background-color: #666;">Remover</button>
+                        </div>
                     </div>
                 `).join('');
             }
+
+            function marcarComoDestaque(index, destaque) {
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+                if (produtos[index]) {
+                    produtos[index].destaque = destaque;
+                    localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                    carregarProdutos();
+                }
+            }
+
+            function removerProduto(index) {
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+                if (produtos[index]) {
+                    produtos.splice(index, 1);
+                    localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+                    carregarProdutos();
+                }
+            }
+
+            window.marcarComoDestaque = marcarComoDestaque;
+            window.removerProduto = removerProduto;
 
             formProduto.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -107,7 +158,8 @@
                     nome: document.getElementById('nome').value,
                     imagem: document.getElementById('imagem').value,
                     link: document.getElementById('link').value,
-                    preco: document.getElementById('preco').value
+                    preco: document.getElementById('preco').value,
+                    destaque: document.getElementById('destaque').checked
                 };
                 const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
                 produtos.push(novoProduto);

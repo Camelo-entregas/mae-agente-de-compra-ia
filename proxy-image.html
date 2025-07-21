@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageUrl = urlParams.get('url');
+        
+        if(imageUrl) {
+            // Redireciona para a imagem original com headers corretos
+            window.location.href = imageUrl;
+        } else {
+            document.body.innerHTML = 'URL da imagem não fornecida';
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

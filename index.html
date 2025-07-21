@@ -1,18 +1,399 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <!-- ... (todo o cabeçalho original permanece igual) ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.AE – Sua Agente de Compras com IA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --cor-primaria: #FF6B6B;
+            --cor-secundaria: #FFA3A3;
+            --cor-texto: #333;
+            --cor-fundo: #FFF0F0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            line-height: 1.6;
+        }
+        
+        /* Cabeçalho com produto em destaque */
+        .header-destaque {
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 1rem;
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .destaque-header {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        
+        .destaque-header-img {
+            flex: 1;
+            max-width: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .destaque-header-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #f5f5f5;
+        }
+        
+        .destaque-header-info {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .destaque-header-tag {
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .destaque-header-title {
+            font-size: 2.5rem;
+            margin: 0 0 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .destaque-header-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD166;
+            margin: 20px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .logo {
+            max-width: 150px;
+            margin-bottom: 1rem;
+        }
+        
+        .titulo-principal {
+            font-family: 'Georgia', serif;
+            font-size: 4rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #FFD166;
+            letter-spacing: 1px;
+        }
+        
+        .slogan {
+            font-size: 1.8rem;
+            font-style: italic;
+            margin: 1rem 0 2rem;
+            color: #FFFFFF;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        /* Seção de Produtos */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .ofertas-titulo {
+            color: var(--cor-primaria);
+            border-bottom: 2px solid var(--cor-primaria);
+            padding-bottom: 10px;
+            margin: 40px 0 20px;
+            font-size: 1.8rem;
+        }
+        
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .produto-card {
+            background: white;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .produto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .produto-oferta {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .produto-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #f5f5f5;
+        }
+        
+        .produto-card h3 {
+            margin: 0 0 10px;
+            font-size: 1.3rem;
+            color: #333;
+        }
+        
+        .produto-preco {
+            font-weight: bold;
+            color: var(--cor-primaria);
+            font-size: 1.5rem;
+            margin: 15px 0;
+        }
+        
+        .btn-comprar {
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-comprar:hover {
+            background-color: #c1121f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Rodapé */
+        .rodape {
+            background-color: #333;
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .servico-item {
+            display: inline-block;
+            width: 200px;
+            margin: 1rem;
+            vertical-align: top;
+        }
+        
+        .servico-item i {
+            font-size: 2rem;
+            color: var(--cor-secundaria);
+            margin-bottom: 1rem;
+        }
+        
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 2rem;
+            line-height: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .redes-sociais {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 3;
+        }
+        
+        .redes-sociais a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        
+        .redes-sociais a:hover {
+            transform: scale(1.2);
+            color: var(--cor-secundaria);
+        }
+
+        /* Estilos para mobile */
+        @media (max-width: 768px) {
+            .header-destaque {
+                padding: 2rem 1rem;
+                min-height: 400px;
+            }
+            
+            .titulo-principal {
+                font-size: 2.5rem;
+            }
+            
+            .slogan {
+                font-size: 1.2rem;
+            }
+            
+            .destaque-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .destaque-header-img {
+                max-width: 100%;
+            }
+            
+            .destaque-header-info {
+                text-align: center;
+            }
+            
+            .produtos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .produto-card img {
+                height: 150px;
+            }
+            
+            .servico-item {
+                width: 100%;
+                margin: 1rem 0;
+            }
+            
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                line-height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- ... (todo o corpo original permanece igual até o script) ... -->
+    <!-- Cabeçalho com produto em destaque -->
+    <header class="header-destaque" id="header-destaque">
+        <div class="redes-sociais">
+            <a href="https://www.facebook.com/paulo.otavio.779?mibextid=ZbWKwL" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.tiktok.com/@paulootavio272?_t=ZM-8y8F9efYCRC&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+        </div>
+        
+        <div class="header-content">
+            <img src="https://i.ibb.co/0jQY4Xk/mae-ia-capa.jpg" alt="Mãe IA" class="logo" loading="lazy">
+            <h1 class="titulo-principal">𝓜𝓐𝓔 — 𝓢𝓾𝓪 𝓐𝓰𝓮𝓷𝓽𝓮 𝓭𝓮 𝓒𝓸𝓶𝓹𝓻𝓪𝓼 𝓬𝓸𝓶 𝓘𝓐</h1>
+            <p class="slogan">A compra que você precisa, com o cuidado que só uma mãe tem.</p>
+            
+            <!-- Área do produto em destaque -->
+            <div id="destaque-header-container"></div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <h2 class="ofertas-titulo">Nossas Recomendações</h2>
+        
+        <div class="produtos-grid" id="produtos-container">
+            <!-- Produtos carregados via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="rodape">
+        <h2>🛍️ O que a Mãe IA faz por você?</h2>
+        <p style="max-width: 800px; margin: 0 auto 2rem;">Compra por você, como uma mãe faria: com carinho, cuidado e inteligência.<br>
+        Deixe que a IA analise, compare e encontre os melhores produtos e preços pra você!</p>
+        
+        <div>
+            <div class="servico-item">
+                <i class="fas fa-search"></i>
+                <h3>Pesquisa inteligente</h3>
+                <p>Diga o que precisa. A Mãe IA vasculha dezenas de sites e encontra a melhor opção.</p>
+            </div>
+            
+            <div class="servico-item">
+                <i class="fas fa-comments"></i>
+                <h3>Atendimento personalizado</h3>
+                <p>Você fala com a IA como se fosse sua mãe mesmo - simpática e direta.</p>
+            </div>
+            
+            <div class="servico-item">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Garantia e segurança</h3>
+                <p>A Mãe confere tudo. Pagamentos seguros e vendedores confiáveis.</p>
+            </div>
+            
+            <div class="servico-item">
+                <i class="fas fa-rocket"></i>
+                <h3>Compra sem esforço</h3>
+                <p>Você só diz o que quer. Ela compra, paga e acompanha o pedido.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão Flutuante do WhatsApp -->
+    <a href="https://wa.me/message/5WUV53TMK6BJA1" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Função para corrigir URLs de imagens (nova adição)
+            // Função para corrigir URLs de imagens (NOVO)
             function corrigirUrlImagem(url) {
                 if(!url) return url;
                 
-                // Se for imagem da Amazon, usa um proxy
+                // Se for imagem da Amazon, usa um serviço proxy
                 if(url.includes('media-amazon.com')) {
                     return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace('https://', ''))}&w=600`;
                 }
@@ -27,7 +408,7 @@
             const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
             const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
             
-            // Exibe o produto em destaque no cabeçalho (modificado)
+            // Exibe o produto em destaque no cabeçalho (MODIFICADO)
             if (destaquePrincipal && destaquePrincipal.produto) {
                 const produto = destaquePrincipal.produto;
                 const imagemCorrigida = corrigirUrlImagem(produto.imagem);
@@ -37,11 +418,7 @@
                 destaqueHeaderContainer.innerHTML = `
                     <div class="destaque-header">
                         <div class="destaque-header-img">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                                 data-src="${imagemCorrigida}" 
-                                 alt="${produto.nome}" 
-                                 loading="lazy"
-                                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23f5f5f5\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-family=\'Arial\' font-size=\'16\' fill=\'%23666\' text-anchor=\'middle\'%3EImagem não disponível%3C/text%3E%3C/svg%3E';this.onerror=null;">
+                            <img src="${imagemCorrigida}" alt="${produto.nome}" loading="lazy">
                         </div>
                         <div class="destaque-header-info">
                             <span class="destaque-header-tag">OFERTA DO DIA</span>
@@ -56,38 +433,20 @@
                 destaqueHeaderContainer.innerHTML = '';
             }
             
-            // Exibe a lista de produtos (modificado)
+            // Exibe a lista de produtos (MODIFICADO)
             if (produtos.length > 0) {
                 produtosContainer.innerHTML = produtos.map(produto => {
                     const imagemCorrigida = corrigirUrlImagem(produto.imagem);
                     return `
                     <div class="produto-card">
                         ${produto.destaque ? '<span class="produto-oferta">OFERTA</span>' : ''}
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 200'%3E%3Crect width='250' height='200' fill='%23f5f5f5'/%3E%3C/svg%3E" 
-                             data-src="${imagemCorrigida}" 
-                             alt="${produto.nome}" 
-                             loading="lazy"
-                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 250 200\'%3E%3Crect width=\'250\' height=\'200\' fill=\'%23f5f5f5\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-family=\'Arial\' font-size=\'14\' fill=\'%23666\' text-anchor=\'middle\'%3EImagem não disponível%3C/text%3E%3C/svg%3E';this.onerror=null;">
+                        <img src="${imagemCorrigida}" alt="${produto.nome}" loading="lazy">
                         <h3>${produto.nome}</h3>
                         <div class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Consultar preço'}</div>
                         <a href="${produto.link}" target="_blank" class="btn-comprar">Comprar</a>
                     </div>
                     `;
                 }).join('');
-
-                // Carrega as imagens quando estiverem visíveis (nova adição)
-                const lazyImages = document.querySelectorAll('img[data-src]');
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            img.src = img.dataset.src;
-                            observer.unobserve(img);
-                        }
-                    });
-                });
-
-                lazyImages.forEach(img => observer.observe(img));
             } else {
                 produtosContainer.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:#666">Em breve novas recomendações para você!</p>';
             }

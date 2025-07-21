@@ -393,11 +393,13 @@
             function corrigirUrlImagem(url) {
                 if(!url) return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlbSBuw6NvIGRpc3BvbsOtdmVsPC90ZXh0Pjwvc3ZnPg==';
                 
-                // Se for imagem de plataformas com restrições
-                if(url.includes('media-amazon.com') || 
-                   url.includes('m.media-amazon.com') || 
-                   url.includes('amazon.com/images')) {
-                    return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace('https://', ''))}&w=800&output=webp`;
+                // Se for imagem da Amazon ou outras plataformas com restrições
+                if(url.includes('amazon.com') || url.includes('media-amazon')) {
+                    // Usa o proxy-image.html que você criou
+                    const urlBase = window.location.href.includes('github.io') ? 
+                        'https://camelo-entregas.github.io/mae-agente-de-compra-ia/' : 
+                        '';
+                    return `${urlBase}proxy-image.html?url=${encodeURIComponent(url)}`;
                 }
                 return url;
             }

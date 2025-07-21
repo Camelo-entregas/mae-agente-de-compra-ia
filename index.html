@@ -64,7 +64,6 @@
             width: 100%;
             height: auto;
             display: block;
-            background: #f5f5f5;
         }
         
         .destaque-header-info {
@@ -178,7 +177,6 @@
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 15px;
-            background: #f5f5f5;
         }
         
         .produto-card h3 {
@@ -269,57 +267,6 @@
             transform: scale(1.2);
             color: var(--cor-secundaria);
         }
-
-        /* Estilos para mobile */
-        @media (max-width: 768px) {
-            .header-destaque {
-                padding: 2rem 1rem;
-                min-height: 400px;
-            }
-            
-            .titulo-principal {
-                font-size: 2.5rem;
-            }
-            
-            .slogan {
-                font-size: 1.2rem;
-            }
-            
-            .destaque-header {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .destaque-header-img {
-                max-width: 100%;
-            }
-            
-            .destaque-header-info {
-                text-align: center;
-            }
-            
-            .produtos-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .produto-card img {
-                height: 150px;
-            }
-            
-            .servico-item {
-                width: 100%;
-                margin: 1rem 0;
-            }
-            
-            .whatsapp-float {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-                line-height: 50px;
-                bottom: 20px;
-                right: 20px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -331,7 +278,7 @@
         </div>
         
         <div class="header-content">
-            <img src="https://i.ibb.co/0jQY4Xk/mae-ia-capa.jpg" alt="Mãe IA" class="logo" loading="lazy">
+            <img src="https://i.ibb.co/0jQY4Xk/mae-ia-capa.jpg" alt="Mãe IA" class="logo">
             <h1 class="titulo-principal">𝓜𝓐𝓔 — 𝓢𝓾𝓪 𝓐𝓰𝓮𝓷𝓽𝓮 𝓭𝓮 𝓒𝓸𝓶𝓹𝓻𝓪𝓼 𝓬𝓸𝓶 𝓘𝓐</h1>
             <p class="slogan">A compra que você precisa, com o cuidado que só uma mãe tem.</p>
             
@@ -389,21 +336,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Função para corrigir URLs de imagens
-            function corrigirUrlImagem(url) {
-                if(!url) return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlbSBuw6NvIGRpc3BvbsOtdmVsPC90ZXh0Pjwvc3ZnPg==';
-                
-                // Se for imagem da Amazon ou outras plataformas com restrições
-                if(url.includes('amazon.com') || url.includes('media-amazon')) {
-                    // Usa o proxy-image.html que você criou
-                    const urlBase = window.location.href.includes('github.io') ? 
-                        'https://camelo-entregas.github.io/mae-agente-de-compra-ia/' : 
-                        '';
-                    return `${urlBase}proxy-image.html?url=${encodeURIComponent(url)}`;
-                }
-                return url;
-            }
-
             const headerDestaque = document.getElementById('header-destaque');
             const destaqueHeaderContainer = document.getElementById('destaque-header-container');
             const produtosContainer = document.getElementById('produtos-container');
@@ -415,15 +347,15 @@
             // Exibe o produto em destaque no cabeçalho
             if (destaquePrincipal && destaquePrincipal.produto) {
                 const produto = destaquePrincipal.produto;
-                const imagemCorrigida = corrigirUrlImagem(produto.imagem);
                 
-                headerDestaque.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${imagemCorrigida}')`;
+                // Define a imagem do produto como fundo do cabeçalho
+                headerDestaque.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${produto.imagem}')`;
                 
+                // Adiciona o produto em destaque no cabeçalho
                 destaqueHeaderContainer.innerHTML = `
                     <div class="destaque-header">
                         <div class="destaque-header-img">
-                            <img src="${imagemCorrigida}" alt="${produto.nome}" loading="lazy"
-                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlbSBuw6NvIGRpc3BvbsOtdmVsPC90ZXh0Pjwvc3ZnPg=='">
+                            <img src="${produto.imagem}" alt="${produto.nome}">
                         </div>
                         <div class="destaque-header-info">
                             <span class="destaque-header-tag">OFERTA DO DIA</span>
@@ -434,25 +366,22 @@
                     </div>
                 `;
             } else {
+                // Se não houver destaque, mostra cabeçalho padrão
                 headerDestaque.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://img.freepik.com/fotos-premium/assistente-moderno-de-inteligencia-artificial-nos-negocios-um-otimo-design-para-todos-os-fins_155807-8460.jpg')`;
                 destaqueHeaderContainer.innerHTML = '';
             }
             
             // Exibe a lista de produtos
             if (produtos.length > 0) {
-                produtosContainer.innerHTML = produtos.map(produto => {
-                    const imagemCorrigida = corrigirUrlImagem(produto.imagem);
-                    return `
+                produtosContainer.innerHTML = produtos.map(produto => `
                     <div class="produto-card">
                         ${produto.destaque ? '<span class="produto-oferta">OFERTA</span>' : ''}
-                        <img src="${imagemCorrigida}" alt="${produto.nome}" loading="lazy"
-                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjAwIj48cmVjdCB3aWR0aD0iMjUwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlbSBuw6NvIGRpc3BvbsOtdmVsPC90ZXh0Pjwvc3ZnPg=='">
+                        <img src="${produto.imagem}" alt="${produto.nome}">
                         <h3>${produto.nome}</h3>
                         <div class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Consultar preço'}</div>
                         <a href="${produto.link}" target="_blank" class="btn-comprar">Comprar</a>
                     </div>
-                    `;
-                }).join('');
+                `).join('');
             } else {
                 produtosContainer.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:#666">Em breve novas recomendações para você!</p>';
             }

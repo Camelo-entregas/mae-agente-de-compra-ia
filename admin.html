@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Mãe, Sua Agente de Compras</title>
+    <title>Admin - Mãe IA</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
             margin: 0;
             padding: 20px;
-            color: #333;
         }
         .container {
             max-width: 1000px;
@@ -23,6 +22,28 @@
         h1 {
             color: #e63946;
             text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
         }
         .produto-card {
             border: 1px solid #ddd;
@@ -41,46 +62,12 @@
             border-radius: 3px;
             font-size: 12px;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="checkbox"] {
-            margin-bottom: 5px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #e63946;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        .acoes-produto {
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Mãe, Sua Agente de Compras com IA</h1>
-        <h2>Área Administrativa</h2>
+        <h1>Painel Administrativo - Mãe IA</h1>
         
-        <div id="produtos-container">
-            <!-- Produtos aparecerão aqui -->
-        </div>
-
         <h2>Adicionar Novo Produto</h2>
         <form id="form-produto">
             <div class="form-group">
@@ -96,64 +83,85 @@
                 <input type="text" id="link" required>
             </div>
             <div class="form-group">
-                <label for="preco">Preço (opcional):</label>
+                <label for="preco">Preço:</label>
                 <input type="text" id="preco">
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="destaque"> Produto em Destaque
+                    <input type="checkbox" id="destaque">
+                    Produto em Destaque (Oferta)
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="destaque-principal">
+                    Destaque Principal (Aparece no cabeçalho)
                 </label>
             </div>
             <button type="submit">Adicionar Produto</button>
         </form>
+
+        <h2>Produtos Cadastrados</h2>
+        <div id="produtos-container"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const produtosContainer = document.getElementById('produtos-container');
             const formProduto = document.getElementById('form-produto');
+            const produtosContainer = document.getElementById('produtos-container');
 
             function carregarProdutos() {
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
+                
                 produtosContainer.innerHTML = produtos.map((produto, index) => `
                     <div class="produto-card">
                         ${produto.destaque ? '<span class="destaque-tag">Destaque</span>' : ''}
+                        ${destaquePrincipal && destaquePrincipal.index === index ? '<span class="destaque-tag" style="background:#2a9d8f">Principal</span>' : ''}
                         <h3>${produto.nome}</h3>
                         <p>Preço: ${produto.preco || 'Não informado'}</p>
-                        <img src="${produto.imagem}" style="max-width: 200px;">
-                        <div class="acoes-produto">
-                            <button onclick="marcarComoDestaque(${index}, ${!produto.destaque})">
-                                ${produto.destaque ? 'Remover Destaque' : 'Tornar Destaque'}
-                            </button>
-                            <button onclick="removerProduto(${index})" style="background-color: #666;">Remover</button>
-                        </div>
+                        <img src="${produto.imagem}" style="max-width: 200px; display: block; margin: 10px 0;">
+                        <button onclick="definirDestaquePrincipal(${index})" style="background:${destaquePrincipal && destaquePrincipal.index === index ? '#ff4444' : '#2a9d8f'}">
+                            ${destaquePrincipal && destaquePrincipal.index === index ? 'Remover como Principal' : 'Definir como Principal'}
+                        </button>
+                        <button onclick="removerProduto(${index})" style="background:#666; margin-left:10px">Remover</button>
                     </div>
                 `).join('');
             }
 
-            function marcarComoDestaque(index, destaque) {
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
-                if (produtos[index]) {
-                    produtos[index].destaque = destaque;
-                    localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
-                    carregarProdutos();
+            window.definirDestaquePrincipal = function(index) {
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                const destaqueAtual = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
+                
+                if (destaqueAtual && destaqueAtual.index === index) {
+                    localStorage.removeItem('destaquePrincipalMaeIA');
+                } else {
+                    localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({
+                        index: index,
+                        produto: produtos[index]
+                    }));
                 }
-            }
+                carregarProdutos();
+            };
 
-            function removerProduto(index) {
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
-                if (produtos[index]) {
+            window.removerProduto = function(index) {
+                if (confirm('Tem certeza que deseja remover este produto?')) {
+                    const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
+                    const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
+                    
+                    if (destaquePrincipal && destaquePrincipal.index === index) {
+                        localStorage.removeItem('destaquePrincipalMaeIA');
+                    }
+                    
                     produtos.splice(index, 1);
                     localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
                     carregarProdutos();
                 }
-            }
-
-            window.marcarComoDestaque = marcarComoDestaque;
-            window.removerProduto = removerProduto;
+            };
 
             formProduto.addEventListener('submit', function(e) {
                 e.preventDefault();
+                
                 const novoProduto = {
                     nome: document.getElementById('nome').value,
                     imagem: document.getElementById('imagem').value,
@@ -161,12 +169,21 @@
                     preco: document.getElementById('preco').value,
                     destaque: document.getElementById('destaque').checked
                 };
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+                
+                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
                 produtos.push(novoProduto);
                 localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
-                carregarProdutos();
+                
+                if (document.getElementById('destaque-principal').checked) {
+                    localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({
+                        index: produtos.length - 1,
+                        produto: novoProduto
+                    }));
+                }
+                
+                alert('Produto adicionado com sucesso!');
                 formProduto.reset();
-                alert('Produto adicionado!');
+                carregarProdutos();
             });
 
             carregarProdutos();

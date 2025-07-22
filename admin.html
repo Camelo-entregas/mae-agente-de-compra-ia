@@ -111,9 +111,10 @@
         .produto-img {
             width: 100px; 
             height: 100px; 
-            object-fit: cover; 
+            object-fit: contain; 
             border-radius: 5px; 
             margin-right: 10px;
+            background: #f9f9f9;
         }
         
         .produto-detalhes {
@@ -221,6 +222,8 @@
                     <option value="Perfumes">Perfumes</option>
                     <option value="Bebidas">Bebidas</option>
                     <option value="Saúde e Beleza">Saúde e Beleza</option>
+                    <option value="Alimentos">Alimentos</option>
+                    <option value="Diversos">Diversos</option>
                 </select>
             </div>
             
@@ -241,7 +244,7 @@
 
     <script>
         let editIndex = -1;
-        const categorias = ['Eletrônicos', 'Celulares', 'Roupas', 'Calçados', 'Perfumes', 'Bebidas', 'Saúde e Beleza'];
+        const categorias = ['Eletrônicos', 'Celulares', 'Roupas', 'Calçados', 'Perfumes', 'Bebidas', 'Saúde e Beleza', 'Alimentos', 'Diversos'];
 
         function carregarProdutos() {
             const lista = document.getElementById('lista-produtos');
@@ -353,7 +356,7 @@
         }
 
         function inserirExemplo() {
-            const categoriasExemplo = ['Eletrônicos', 'Celulares', 'Roupas', 'Perfumes'];
+            const categoriasExemplo = ['Eletrônicos', 'Celulares', 'Roupas', 'Perfumes', 'Alimentos', 'Diversos'];
             const categoriaAleatoria = categoriasExemplo[Math.floor(Math.random() * categoriasExemplo.length)];
             
             document.getElementById('nome').value = "Produto Exemplo " + (Math.floor(Math.random() * 100) + 1);

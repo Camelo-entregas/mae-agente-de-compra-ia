@@ -11,6 +11,8 @@
             --cor-secundaria: #FFA3A3;
             --cor-texto: #333;
             --cor-fundo: #FFF0F0;
+            --cor-destaque: #FFD166;
+            --cor-categoria: #4ECDC4;
         }
         
         body {
@@ -92,7 +94,7 @@
         .destaque-header-price {
             font-size: 2rem;
             font-weight: bold;
-            color: #FFD166;
+            color: var(--cor-destaque);
             margin: 20px 0;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
@@ -107,7 +109,7 @@
             font-size: 4rem;
             margin: 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            color: #FFD166;
+            color: var(--cor-destaque);
             letter-spacing: 1px;
         }
         
@@ -121,7 +123,7 @@
         
         /* Seção de Produtos */
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 2rem auto;
             background: white;
             padding: 20px;
@@ -135,11 +137,37 @@
             padding-bottom: 10px;
             margin: 40px 0 20px;
             font-size: 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .categorias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-categoria {
+            background-color: var(--cor-categoria);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-categoria:hover, .btn-categoria.ativo {
+            background-color: var(--cor-primaria);
+            transform: translateY(-2px);
         }
         
         .produtos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
             margin-top: 20px;
         }
@@ -152,11 +180,25 @@
             transition: all 0.3s;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         
         .produto-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .produto-categoria {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--cor-categoria);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
         
         .produto-oferta {
@@ -183,6 +225,7 @@
             margin: 0 0 10px;
             font-size: 1.3rem;
             color: #333;
+            flex-grow: 1;
         }
         
         .produto-preco {
@@ -203,6 +246,7 @@
             font-weight: bold;
             font-size: 1.1rem;
             transition: all 0.3s;
+            text-align: center;
         }
         
         .btn-comprar:hover {
@@ -220,11 +264,20 @@
             margin-top: 30px;
         }
         
+        .servicos-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
         .servico-item {
-            display: inline-block;
-            width: 200px;
-            margin: 1rem;
-            vertical-align: top;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 220px;
         }
         
         .servico-item i {
@@ -247,6 +300,11 @@
             line-height: 60px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-float:hover {
+            transform: scale(1.1);
         }
         
         .redes-sociais {
@@ -266,6 +324,35 @@
         .redes-sociais a:hover {
             transform: scale(1.2);
             color: var(--cor-secundaria);
+        }
+
+        @media (max-width: 768px) {
+            .destaque-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .destaque-header-img, .destaque-header-info {
+                max-width: 100%;
+                text-align: center;
+            }
+            
+            .titulo-principal {
+                font-size: 2.5rem;
+            }
+            
+            .slogan {
+                font-size: 1.2rem;
+            }
+            
+            .ofertas-titulo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .categorias {
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
@@ -289,7 +376,12 @@
 
     <!-- Conteúdo Principal -->
     <main class="container">
-        <h2 class="ofertas-titulo">Nossas Recomendações</h2>
+        <h2 class="ofertas-titulo">
+            Nossas Recomendações
+            <div class="categorias" id="categorias-container">
+                <!-- Categorias serão preenchidas via JavaScript -->
+            </div>
+        </h2>
         
         <div class="produtos-grid" id="produtos-container">
             <!-- Produtos carregados via JavaScript -->
@@ -302,7 +394,7 @@
         <p style="max-width: 800px; margin: 0 auto 2rem;">Compra por você, como uma mãe faria: com carinho, cuidado e inteligência.<br>
         Deixe que a IA analise, compare e encontre os melhores produtos e preços pra você!</p>
         
-        <div>
+        <div class="servicos-container">
             <div class="servico-item">
                 <i class="fas fa-search"></i>
                 <h3>Pesquisa inteligente</h3>
@@ -339,23 +431,35 @@
             const headerDestaque = document.getElementById('header-destaque');
             const destaqueHeaderContainer = document.getElementById('destaque-header-container');
             const produtosContainer = document.getElementById('produtos-container');
+            const categoriasContainer = document.getElementById('categorias-container');
+            
+            // Categorias disponíveis
+            const categorias = [
+                'Todos', 'Eletrônicos', 'Celulares', 'Roupas', 
+                'Calçados', 'Perfumes', 'Bebidas', 'Saúde e Beleza'
+            ];
             
             // Carrega dados do localStorage
             const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
             const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
             
+            // Exibe as categorias
+            categoriasContainer.innerHTML = categorias.map(categoria => `
+                <button class="btn-categoria" onclick="filtrarProdutos('${categoria}')">
+                    ${categoria}
+                </button>
+            `).join('');
+            
             // Exibe o produto em destaque no cabeçalho
             if (destaquePrincipal && destaquePrincipal.produto) {
                 const produto = destaquePrincipal.produto;
                 
-                // Define a imagem do produto como fundo do cabeçalho
                 headerDestaque.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${produto.imagem}')`;
                 
-                // Adiciona o produto em destaque no cabeçalho
                 destaqueHeaderContainer.innerHTML = `
                     <div class="destaque-header">
                         <div class="destaque-header-img">
-                            <img src="${produto.imagem}" alt="${produto.nome}">
+                            <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
                         </div>
                         <div class="destaque-header-info">
                             <span class="destaque-header-tag">OFERTA DO DIA</span>
@@ -366,24 +470,45 @@
                     </div>
                 `;
             } else {
-                // Se não houver destaque, mostra cabeçalho padrão
                 headerDestaque.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://img.freepik.com/fotos-premium/assistente-moderno-de-inteligencia-artificial-nos-negocios-um-otimo-design-para-todos-os-fins_155807-8460.jpg')`;
                 destaqueHeaderContainer.innerHTML = '';
             }
             
-            // Exibe a lista de produtos
-            if (produtos.length > 0) {
-                produtosContainer.innerHTML = produtos.map(produto => `
-                    <div class="produto-card">
-                        ${produto.destaque ? '<span class="produto-oferta">OFERTA</span>' : ''}
-                        <img src="${produto.imagem}" alt="${produto.nome}">
-                        <h3>${produto.nome}</h3>
-                        <div class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Consultar preço'}</div>
-                        <a href="${produto.link}" target="_blank" class="btn-comprar">Comprar</a>
-                    </div>
-                `).join('');
-            } else {
-                produtosContainer.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:#666">Em breve novas recomendações para você!</p>';
+            // Exibe todos os produtos inicialmente
+            filtrarProdutos('Todos');
+            
+            // Função para filtrar produtos por categoria
+            window.filtrarProdutos = function(categoria) {
+                // Ativa o botão da categoria selecionada
+                document.querySelectorAll('.btn-categoria').forEach(btn => {
+                    btn.classList.toggle('ativo', btn.textContent === categoria);
+                });
+                
+                // Filtra os produtos
+                const produtosFiltrados = categoria === 'Todos' 
+                    ? produtos 
+                    : produtos.filter(p => p.categoria === categoria);
+                
+                // Exibe os produtos filtrados
+                if (produtosFiltrados.length > 0) {
+                    produtosContainer.innerHTML = produtosFiltrados.map(produto => `
+                        <div class="produto-card">
+                            ${produto.destaque ? '<span class="produto-oferta">OFERTA</span>' : ''}
+                            ${produto.categoria ? `<span class="produto-categoria">${produto.categoria}</span>` : ''}
+                            <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
+                            <h3>${produto.nome}</h3>
+                            <div class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Consultar preço'}</div>
+                            <a href="${produto.link}" target="_blank" class="btn-comprar">Comprar</a>
+                        </div>
+                    `).join('');
+                } else {
+                    produtosContainer.innerHTML = `
+                        <p style="text-align:center; grid-column:1/-1; color:#666">
+                            Nenhum produto encontrado na categoria ${categoria}.
+                            ${categoria !== 'Todos' ? '<button class="btn-categoria" onclick="filtrarProdutos(\'Todos\')" style="margin-top:10px;">Ver todos os produtos</button>' : ''}
+                        </p>
+                    `;
+                }
             }
         });
     </script>

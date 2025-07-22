@@ -1,14 +1,214 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <!-- ... (cabeçalho anterior mantido) ... -->
+    <meta charset="UTF-8">
+    <title>Admin - Mãe IA (Completo)</title>
+    <style>
+        :root {
+            --cor-primaria: #FF6B6B;
+            --cor-secundaria: #FFA3A3;
+            --cor-categoria: #4ECDC4;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 2rem; 
+            background: #f0f0f0; 
+            color: #333; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 { 
+            color: var(--cor-primaria); 
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        label { 
+            display: block; 
+            margin: 10px 0 5px; 
+            font-weight: bold;
+        }
+        
+        input[type="text"], 
+        select {
+            width: 100%; 
+            padding: 10px; 
+            margin-bottom: 1rem; 
+            border: 1px solid #ccc; 
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        button { 
+            background: var(--cor-primaria); 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            font-weight: bold; 
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover { 
+            background: #d94b4b; 
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .produto-item { 
+            background: white; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .produto-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .produto-info { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            flex-wrap: wrap; 
+            gap: 1rem;
+        }
+        
+        .produto-img {
+            width: 100px; 
+            height: 100px; 
+            object-fit: cover; 
+            border-radius: 5px; 
+            margin-right: 10px;
+        }
+        
+        .produto-detalhes {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .produto-detalhes strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .produto-categoria {
+            display: inline-block;
+            background-color: var(--cor-categoria);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .produto-destaque {
+            display: inline-block;
+            background-color: var(--cor-primaria);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .btn-group { 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap;
+        }
+        
+        .btn-group button {
+            padding: 8px 12px;
+        }
+        
+        .btn-edit { background: #17a2b8; }
+        .btn-delete { background: #dc3545; }
+        .btn-featured { background: #ffc107; color: #212529; }
+        
+        .btn-edit:hover { background: #138496; }
+        .btn-delete:hover { background: #c82333; }
+        .btn-featured:hover { background: #e0a800; }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .produto-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn-group {
+                width: 100%;
+            }
+            
+            .btn-group button {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- ... (formulário anterior mantido) ... -->
-    
+    <h1>Administração de Produtos – Mãe IA</h1>
+
     <div class="form-container">
         <div class="form-grid">
-            <!-- ... (outros campos mantidos) ... -->
+            <div>
+                <label for="nome">Nome do Produto</label>
+                <input type="text" id="nome" placeholder="Ex: Smartphone XYZ">
+            </div>
+            
+            <div>
+                <label for="preco">Preço</label>
+                <input type="text" id="preco" placeholder="Ex: 129,90">
+            </div>
+            
+            <div>
+                <label for="link">Link de Compra</label>
+                <input type="text" id="link" placeholder="https://www.exemplo.com/produto">
+            </div>
+            
+            <div>
+                <label for="imagem">URL da Imagem</label>
+                <input type="text" id="imagem" placeholder="https://i.imgur.com/exemplo.jpg">
+            </div>
             
             <div>
                 <label for="categoria">Categoria</label>
@@ -21,31 +221,150 @@
                     <option value="Perfumes">Perfumes</option>
                     <option value="Bebidas">Bebidas</option>
                     <option value="Saúde e Beleza">Saúde e Beleza</option>
-                    <option value="Alimentos">Alimentos</option>
-                    <option value="Diversos">Diversos</option>
                 </select>
             </div>
             
-            <!-- ... (restante do formulário mantido) ... -->
+            <div>
+                <label><input type="checkbox" id="destaque"> Produto em Destaque?</label>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button onclick="adicionarProduto()">Salvar Produto</button>
+            <button onclick="limparFormulario()" class="btn-secondary">Limpar Formulário</button>
+            <button onclick="inserirExemplo()">Inserir Exemplo</button>
         </div>
     </div>
 
-    <!-- ... (restante do código mantido) ... -->
+    <h2>Produtos Cadastrados</h2>
+    <div id="lista-produtos"></div>
 
     <script>
-        // ... (código anterior mantido) ...
+        let editIndex = -1;
+        const categorias = ['Eletrônicos', 'Celulares', 'Roupas', 'Calçados', 'Perfumes', 'Bebidas', 'Saúde e Beleza'];
 
-        function inserirExemplo() {
-            const categoriasExemplo = [
-                'Eletrônicos', 'Celulares', 'Roupas', 'Perfumes',
-                'Alimentos', 'Diversos', 'Bebidas', 'Saúde e Beleza'
-            ];
-            const categoriaAleatoria = categoriasExemplo[Math.floor(Math.random() * categoriasExemplo.length)];
-            
-            // ... (restante da função mantido) ...
+        function carregarProdutos() {
+            const lista = document.getElementById('lista-produtos');
+            lista.innerHTML = '';
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const destaque = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || '{}');
+
+            if (produtos.length === 0) {
+                lista.innerHTML = '<p style="text-align:center; color:#666;">Nenhum produto cadastrado ainda.</p>';
+                return;
+            }
+
+            produtos.forEach((produto, index) => {
+                const div = document.createElement('div');
+                div.className = 'produto-item';
+                div.innerHTML = `
+                    <div class="produto-info">
+                        <img src="${produto.imagem}" class="produto-img" onerror="this.src='https://via.placeholder.com/100x100?text=Sem+Imagem'">
+                        <div class="produto-detalhes">
+                            <strong>${produto.nome}</strong>
+                            R$ ${produto.preco}
+                            ${produto.categoria ? `<span class="produto-categoria">${produto.categoria}</span>` : ''}
+                            ${produto.destaque ? '<span class="produto-destaque">Destaque</span>' : ''}
+                        </div>
+                        <div class="btn-group">
+                            <button onclick="editarProduto(${index})" class="btn-edit">✏️ Editar</button>
+                            <button onclick="excluirProduto(${index})" class="btn-delete">🗑️ Excluir</button>
+                            <button onclick="definirDestaque(${index})" class="btn-featured">
+                                ${destaque?.produto?.nome === produto.nome ? '⭐ Em Destaque' : '🔼 Destacar'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
         }
 
-        // ... (restante do código mantido) ...
+        function adicionarProduto() {
+            const nome = document.getElementById('nome').value.trim();
+            const preco = document.getElementById('preco').value.trim();
+            const link = document.getElementById('link').value.trim();
+            const imagem = document.getElementById('imagem').value.trim();
+            const categoria = document.getElementById('categoria').value;
+            const destaque = document.getElementById('destaque').checked;
+
+            if (!nome || !preco || !link || !imagem) {
+                alert('Preencha todos os campos obrigatórios');
+                return;
+            }
+
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const produto = { nome, preco, link, imagem, categoria, destaque };
+
+            if (editIndex >= 0) {
+                produtos[editIndex] = produto;
+                editIndex = -1;
+            } else {
+                produtos.push(produto);
+            }
+
+            localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+
+            if (destaque) {
+                localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({ produto }));
+            }
+
+            limparFormulario();
+            carregarProdutos();
+            alert('Produto salvo com sucesso!');
+        }
+
+        function editarProduto(index) {
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const p = produtos[index];
+            document.getElementById('nome').value = p.nome;
+            document.getElementById('preco').value = p.preco;
+            document.getElementById('link').value = p.link;
+            document.getElementById('imagem').value = p.imagem;
+            document.getElementById('categoria').value = p.categoria || '';
+            document.getElementById('destaque').checked = p.destaque || false;
+            editIndex = index;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function excluirProduto(index) {
+            if (!confirm('Deseja excluir este produto?')) return;
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            produtos.splice(index, 1);
+            localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+            carregarProdutos();
+        }
+
+        function definirDestaque(index) {
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const produto = produtos[index];
+            localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({ produto }));
+            carregarProdutos();
+            alert('Produto definido como destaque!');
+        }
+
+        function limparFormulario() {
+            document.getElementById('nome').value = '';
+            document.getElementById('preco').value = '';
+            document.getElementById('link').value = '';
+            document.getElementById('imagem').value = '';
+            document.getElementById('categoria').value = '';
+            document.getElementById('destaque').checked = false;
+            editIndex = -1;
+        }
+
+        function inserirExemplo() {
+            const categoriasExemplo = ['Eletrônicos', 'Celulares', 'Roupas', 'Perfumes'];
+            const categoriaAleatoria = categoriasExemplo[Math.floor(Math.random() * categoriasExemplo.length)];
+            
+            document.getElementById('nome').value = "Produto Exemplo " + (Math.floor(Math.random() * 100) + 1);
+            document.getElementById('preco').value = (Math.random() * 500 + 50).toFixed(2).replace('.', ',');
+            document.getElementById('link').value = "https://www.exemplo.com/produto";
+            document.getElementById('imagem').value = "https://picsum.photos/400/300?random=" + Math.floor(Math.random() * 1000);
+            document.getElementById('categoria').value = categoriaAleatoria;
+            document.getElementById('destaque').checked = Math.random() > 0.7;
+        }
+
+        carregarProdutos();
     </script>
 </body>
 </html>

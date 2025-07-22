@@ -1,207 +1,150 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Mãe IA</title>
+    <title>Admin - Mãe IA (Completo)</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #e63946;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #e63946;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        .produto-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            position: relative;
-        }
-        .destaque-tag {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #e63946;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 12px;
-        }
-        .destaque-principal-tag {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #2a9d8f;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 12px;
-        }
+        body { font-family: Arial, sans-serif; padding: 2rem; background: #f0f0f0; color: #333; }
+        h1 { color: #FF6B6B; }
+        label { display: block; margin: 10px 0 5px; }
+        input[type="text"] { width: 100%; padding: 10px; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #FF6B6B; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #d94b4b; }
+        .produto-item { background: white; padding: 10px; margin: 10px 0; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .produto-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 5px; margin-right: 10px; }
+        .produto-info { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        .produto-info div { margin: 5px; flex: 1; min-width: 200px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Painel Administrativo - Mãe IA</h1>
-        
-        <h2>Adicionar Novo Produto</h2>
-        <form id="form-produto">
-            <div class="form-group">
-                <label for="nome">Nome do Produto:</label>
-                <input type="text" id="nome" required>
-            </div>
-            <div class="form-group">
-                <label for="imagem">URL da Imagem:</label>
-                <input type="text" id="imagem" required>
-            </div>
-            <div class="form-group">
-                <label for="link">Link de Afiliado:</label>
-                <input type="text" id="link" required>
-            </div>
-            <div class="form-group">
-                <label for="preco">Preço:</label>
-                <input type="text" id="preco">
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="destaque">
-                    Marcar como Destaque (Oferta)
-                </label>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="destaque-principal">
-                    Marcar como Destaque Principal (Aparece no cabeçalho)
-                </label>
-            </div>
-            <button type="submit">Adicionar Produto</button>
-        </form>
+    <h1>Administração de Produtos – Mãe IA</h1>
 
-        <h2>Produtos Cadastrados</h2>
-        <div id="produtos-container"></div>
-    </div>
+    <label for="nome">Nome do Produto</label>
+    <input type="text" id="nome">
+
+    <label for="preco">Preço</label>
+    <input type="text" id="preco">
+
+    <label for="link">Link de Compra</label>
+    <input type="text" id="link">
+
+    <label for="imagem">URL da Imagem</label>
+    <input type="text" id="imagem">
+
+    <label><input type="checkbox" id="destaque"> Produto em Destaque?</label>
+
+    <button onclick="adicionarProduto()">Adicionar Produto</button>
+    <button onclick="inserirExemplo()">Inserir Exemplo</button>
+
+    <h2>Produtos Cadastrados</h2>
+    <div id="lista-produtos"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const formProduto = document.getElementById('form-produto');
-            const produtosContainer = document.getElementById('produtos-container');
+        let editIndex = -1;
 
-            function carregarProdutos() {
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
-                const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
-                
-                produtosContainer.innerHTML = produtos.map((produto, index) => `
-                    <div class="produto-card">
-                        ${produto.destaque ? '<span class="destaque-tag">Destaque</span>' : ''}
-                        ${destaquePrincipal && destaquePrincipal.index === index ? '<span class="destaque-principal-tag">Principal</span>' : ''}
-                        <h3>${produto.nome}</h3>
-                        <p>Preço: ${produto.preco || 'Não informado'}</p>
-                        <img src="${produto.imagem}" style="max-width: 200px; display: block; margin: 10px 0;">
-                        <div>
-                            <button onclick="definirDestaquePrincipal(${index})" style="background:${destaquePrincipal && destaquePrincipal.index === index ? '#ff4444' : '#2a9d8f'}">
-                                ${destaquePrincipal && destaquePrincipal.index === index ? 'Remover como Principal' : 'Definir como Principal'}
-                            </button>
-                            <button onclick="removerProduto(${index})" style="background:#666">Remover</button>
+        function carregarProdutos() {
+            const lista = document.getElementById('lista-produtos');
+            lista.innerHTML = '';
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const destaque = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || '{}');
+
+            produtos.forEach((produto, index) => {
+                const div = document.createElement('div');
+                div.className = 'produto-item';
+                div.innerHTML = `
+                    <div class="produto-info">
+                        <img src="${produto.imagem}" onerror="this.src='https://via.placeholder.com/100x100?text=Erro'">
+                        <div><strong>${produto.nome}</strong><br>R$ ${produto.preco}</div>
+                        <div><a href="${produto.link}" target="_blank">Ver Produto</a></div>
+                        <div class="btn-group">
+                            <button onclick="editarProduto(${index})">✏️ Editar</button>
+                            <button onclick="excluirProduto(${index})">🗑️ Excluir</button>
+                            <button onclick="definirDestaque(${index})">${destaque?.produto?.nome === produto.nome ? '⭐ Em Destaque' : '🔄 Destacar'}</button>
                         </div>
                     </div>
-                `).join('');
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        function adicionarProduto() {
+            const nome = document.getElementById('nome').value.trim();
+            const preco = document.getElementById('preco').value.trim();
+            const link = document.getElementById('link').value.trim();
+            const imagem = document.getElementById('imagem').value.trim();
+            const destaque = document.getElementById('destaque').checked;
+
+            if (!nome || !preco || !link || !imagem) {
+                alert('Preencha todos os campos');
+                return;
             }
 
-            window.definirDestaquePrincipal = function(index) {
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
-                const destaqueAtual = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
-                
-                if (destaqueAtual && destaqueAtual.index === index) {
-                    localStorage.removeItem('destaquePrincipalMaeIA');
-                } else {
-                    localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({
-                        index: index,
-                        produto: produtos[index]
-                    }));
-                }
-                carregarProdutos();
-                alert('Destaque principal atualizado!');
-            };
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const produto = { nome, preco, link, imagem, destaque };
 
-            window.removerProduto = function(index) {
-                if (confirm('Tem certeza que deseja remover este produto?')) {
-                    const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
-                    const destaquePrincipal = JSON.parse(localStorage.getItem('destaquePrincipalMaeIA') || null);
-                    
-                    if (destaquePrincipal && destaquePrincipal.index === index) {
-                        localStorage.removeItem('destaquePrincipalMaeIA');
-                    }
-                    
-                    produtos.splice(index, 1);
-                    localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
-                    carregarProdutos();
-                }
-            };
+            if (editIndex >= 0) {
+                produtos[editIndex] = produto;
+                editIndex = -1;
+            } else {
+                produtos.push(produto);
+            }
 
-            formProduto.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const novoProduto = {
-                    nome: document.getElementById('nome').value,
-                    imagem: document.getElementById('imagem').value,
-                    link: document.getElementById('link').value,
-                    preco: document.getElementById('preco').value,
-                    destaque: document.getElementById('destaque').checked
-                };
-                
-                const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || []);
-                produtos.push(novoProduto);
-                localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
-                
-                if (document.getElementById('destaque-principal').checked) {
-                    localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({
-                        index: produtos.length - 1,
-                        produto: novoProduto
-                    }));
-                }
-                
-                alert('Produto adicionado com sucesso!');
-                formProduto.reset();
-                carregarProdutos();
-            });
+            localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
 
+            if (destaque) {
+                localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({ produto }));
+            }
+
+            limparFormulario();
             carregarProdutos();
-        });
+            alert('Produto salvo com sucesso!');
+        }
+
+        function editarProduto(index) {
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const p = produtos[index];
+            document.getElementById('nome').value = p.nome;
+            document.getElementById('preco').value = p.preco;
+            document.getElementById('link').value = p.link;
+            document.getElementById('imagem').value = p.imagem;
+            document.getElementById('destaque').checked = p.destaque;
+            editIndex = index;
+        }
+
+        function excluirProduto(index) {
+            if (!confirm('Deseja excluir este produto?')) return;
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            produtos.splice(index, 1);
+            localStorage.setItem('produtosMaeIA', JSON.stringify(produtos));
+            carregarProdutos();
+        }
+
+        function definirDestaque(index) {
+            const produtos = JSON.parse(localStorage.getItem('produtosMaeIA') || '[]');
+            const produto = produtos[index];
+            localStorage.setItem('destaquePrincipalMaeIA', JSON.stringify({ produto }));
+            carregarProdutos();
+        }
+
+        function limparFormulario() {
+            document.getElementById('nome').value = '';
+            document.getElementById('preco').value = '';
+            document.getElementById('link').value = '';
+            document.getElementById('imagem').value = '';
+            document.getElementById('destaque').checked = false;
+        }
+
+        function inserirExemplo() {
+            document.getElementById('nome').value = "Bolsa Feminina Estilosa";
+            document.getElementById('preco').value = "129,90";
+            document.getElementById('link').value = "https://www.exemplo.com/produto/bolsa";
+            document.getElementById('imagem').value = "https://i.imgur.com/NnJQ4Y2.jpg";
+            document.getElementById('destaque').checked = true;
+        }
+
+        carregarProdutos();
     </script>
 </body>
 </html>

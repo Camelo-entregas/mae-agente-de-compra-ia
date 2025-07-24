@@ -25,9 +25,10 @@
         }
         
         .header-destaque {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://img.freepik.com/fotos-premium/assistente-moderno-de-inteligencia-artificial-nos-negocios-um-otimo-design-para-todos-os-fins_155807-8460.jpg');
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/header-bg.jpg');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             color: white;
             text-align: center;
             padding: 4rem 1rem;
@@ -162,13 +163,23 @@
             .titulo-principal { font-size: 2rem; }
             .produtos-grid { grid-template-columns: 1fr; }
             .whatsapp-float { width: 50px; height: 50px; line-height: 50px; font-size: 1.5rem; }
+            
+            /* Otimização para mobile */
+            .header-destaque {
+                min-height: 300px;
+                background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/header-bg-mobile.jpg');
+            }
+            
+            .produto-card img {
+                height: 150px;
+            }
         }
     </style>
 </head>
 <body>
     <header class="header-destaque" id="header-destaque">
         <div class="header-content">
-            <img src="https://i.ibb.co/0jQY4Xk/mae-ia-capa.jpg" alt="Mãe IA" class="logo">
+            <img src="/images/logo-maeia.jpg" alt="Mãe IA" class="logo">
             <h1 class="titulo-principal">M.AE — Sua Agente de Compras com IA</h1>
             <p>A compra que você precisa, com o cuidado que só uma mãe tem.</p>
             <div id="destaque-header-container"></div>
@@ -205,24 +216,30 @@
                 </button>
             `).join('');
             
-            // Função para corrigir URL de imagens do Amazon
-            function corrigirUrlImagem(url) {
-                if (!url) return 'https://via.placeholder.com/300x200?text=Sem+Imagem';
-                
-                // Se for do domínio do Amazon, tenta forçar o uso de imagem pública
-                if (url.includes('m.media-amazon.com')) {
-                    // Remove parâmetros extras e força HTTPS
-                    return url.split('?')[0] + '?format=jpg&quality=85';
+            // Função para gerenciar imagens
+            function gerenciarImagens(url, tipo) {
+                // Se já for uma imagem local
+                if (url && url.startsWith('/images/')) {
+                    return url;
                 }
                 
-                // Para qualquer outra URL, garante HTTPS
-                return url.startsWith('http://') ? url.replace('http://', 'https://') : url;
+                // Padrões para tipos específicos
+                switch(tipo) {
+                    case 'header':
+                        return url || '/images/header-bg.jpg';
+                    case 'logo':
+                        return url || '/images/logo-maeia.jpg';
+                    case 'produto':
+                        return url || '/images/produto-sem-imagem.jpg';
+                    default:
+                        return url || '/images/sem-imagem.jpg';
+                }
             }
             
             // Exibe o produto em destaque no cabeçalho
             if (destaquePrincipal?.produto) {
                 const produto = destaquePrincipal.produto;
-                const imagemSegura = corrigirUrlImagem(produto.imagem);
+                const imagemSegura = gerenciarImagens(produto.imagem, 'header');
                 
                 document.getElementById('header-destaque').style.backgroundImage = 
                     `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${imagemSegura}')`;
@@ -252,11 +269,11 @@
                 const container = document.getElementById('produtos-container');
                 if (produtosFiltrados.length > 0) {
                     container.innerHTML = produtosFiltrados.map(produto => {
-                        const imagemSegura = corrigirUrlImagem(produto.imagem);
+                        const imagemSegura = gerenciarImagens(produto.imagem, 'produto');
                         return `
                             <div class="produto-card">
                                 ${produto.destaque ? '<span style="position:absolute;top:10px;right:10px;background:var(--cor-primaria);color:white;padding:2px 8px;border-radius:3px;">OFERTA</span>' : ''}
-                                <img src="${imagemSegura}" alt="${produto.nome}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagem+Indispon%C3%ADvel'">
+                                <img src="${imagemSegura}" alt="${produto.nome}" onerror="this.src='/images/produto-sem-imagem.jpg'">
                                 <h3>${produto.nome}</h3>
                                 <div class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Consultar preço'}</div>
                                 <a href="${produto.link}" target="_blank" class="btn-comprar">Comprar</a>

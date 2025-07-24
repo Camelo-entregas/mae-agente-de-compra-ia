@@ -102,6 +102,7 @@
             border-radius: 10px;
             transition: all 0.3s;
             position: relative;
+            text-align: center;
         }
         
         .produto-card img {
@@ -110,6 +111,7 @@
             object-fit: contain;
             border-radius: 8px;
             background: #f9f9f9;
+            margin-bottom: 10px;
         }
         
         .produto-preco {
@@ -128,6 +130,11 @@
             display: inline-block;
             margin-top: 10px;
             font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .btn-comprar:hover {
+            background-color: #e55050;
         }
         
         .whatsapp-float {
@@ -142,11 +149,19 @@
             text-align: center;
             font-size: 2rem;
             line-height: 60px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .whatsapp-float:hover {
+            transform: scale(1.1);
         }
         
         @media (max-width: 768px) {
             .titulo-principal { font-size: 2rem; }
             .produtos-grid { grid-template-columns: 1fr; }
+            .whatsapp-float { width: 50px; height: 50px; line-height: 50px; font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -172,7 +187,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Categorias disponíveis (deve corresponder às do admin)
+            // Categorias disponíveis
             const categorias = [
                 'Todos', 'Eletrônicos', 'Celulares', 'Roupas', 
                 'Calçados', 'Perfumes', 'Bebidas', 'Saúde e Beleza',
@@ -190,11 +205,27 @@
                 </button>
             `).join('');
             
+            // Função para corrigir URL de imagens do Amazon
+            function corrigirUrlImagem(url) {
+                if (!url) return 'https://via.placeholder.com/300x200?text=Sem+Imagem';
+                
+                // Se for do domínio do Amazon, tenta forçar o uso de imagem pública
+                if (url.includes('m.media-amazon.com')) {
+                    // Remove parâmetros extras e força HTTPS
+                    return url.split('?')[0] + '?format=jpg&quality=85';
+                }
+                
+                // Para qualquer outra URL, garante HTTPS
+                return url.startsWith('http://') ? url.replace('http://', 'https://') : url;
+            }
+            
             // Exibe o produto em destaque no cabeçalho
             if (destaquePrincipal?.produto) {
                 const produto = destaquePrincipal.produto;
+                const imagemSegura = corrigirUrlImagem(produto.imagem);
+                
                 document.getElementById('header-destaque').style.backgroundImage = 
-                    `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${produto.imagem}')`;
+                    `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${imagemSegura}')`;
                 
                 document.getElementById('destaque-header-container').innerHTML = `
                     <div style="margin-top:20px;text-align:center;">
@@ -212,7 +243,7 @@
                     btn.classList.toggle('ativo', btn.textContent === categoriaSelecionada);
                 });
                 
-                // Filtra os produtos (comparação case-insensitive)
+                // Filtra os produtos
                 const produtosFiltrados = categoriaSelecionada === 'Todos' 
                     ? produtos 
                     : produtos.filter(p => p.categoria && p.categoria.toLowerCase() === categoriaSelecionada.toLowerCase());
@@ -220,15 +251,18 @@
                 // Exibe os produtos filtrados
                 const container = document.getElementById('produtos-container');
                 if (produtosFiltrados.length > 0) {
-                    container.innerHTML = produtosFiltrados.map(produto => `
-                        <div class="produto-card">
-                            ${produto.destaque ? '<span style="position:absolute;top:10px;right:10px;background:var(--cor-primaria);color:white;padding:2px 8px;border-radius:3px;">OFERTA</span>' : ''}
-                            <img src="${produto.imagem}" alt="${produto.nome}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagem+Indispon%C3%ADvel'">
-                            <h3>${produto.nome}</h3>
-                            <div class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Consultar preço'}</div>
-                            <a href="${produto.link}" target="_blank" class="btn-comprar">Comprar</a>
-                        </div>
-                    `).join('');
+                    container.innerHTML = produtosFiltrados.map(produto => {
+                        const imagemSegura = corrigirUrlImagem(produto.imagem);
+                        return `
+                            <div class="produto-card">
+                                ${produto.destaque ? '<span style="position:absolute;top:10px;right:10px;background:var(--cor-primaria);color:white;padding:2px 8px;border-radius:3px;">OFERTA</span>' : ''}
+                                <img src="${imagemSegura}" alt="${produto.nome}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagem+Indispon%C3%ADvel'">
+                                <h3>${produto.nome}</h3>
+                                <div class="produto-preco">${produto.preco ? 'R$ ' + produto.preco : 'Consultar preço'}</div>
+                                <a href="${produto.link}" target="_blank" class="btn-comprar">Comprar</a>
+                            </div>
+                        `;
+                    }).join('');
                 } else {
                     container.innerHTML = `
                         <div style="grid-column:1/-1;text-align:center;color:#666;">

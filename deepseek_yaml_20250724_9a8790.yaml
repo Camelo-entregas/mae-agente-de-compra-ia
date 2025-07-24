@@ -1,0 +1,19 @@
+name: Processar Imagens
+
+on:
+  push:
+    paths:
+      - 'images/**'
+
+jobs:
+  process-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Otimizar para mobile
+        uses: calibreapp/image-actions@main
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          compressOnly: true
+          jpegQuality: '80'
+          resize: '600x>'

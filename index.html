@@ -295,6 +295,37 @@
             // Exibe todos os produtos inicialmente
             filtrarProdutos('Todos');
         });
+
+        // Código para otimização de imagens em dispositivos móveis
+        function carregarImagensOtimizadas() {
+            const isMobile = window.innerWidth <= 768;
+            const header = document.getElementById('header-destaque');
+            
+            // Verifica se o header existe e se é mobile
+            if (header && isMobile) {
+                const imagemAtual = header.style.backgroundImage;
+                // Verifica se a imagem atual contém '.jpg' antes de tentar substituir
+                if (imagemAtual && imagemAtual.includes('.jpg')) {
+                    const novaImagem = imagemAtual.replace('.jpg', '-mobile.jpg');
+                    header.style.backgroundImage = novaImagem;
+                }
+            }
+            
+            // Otimiza imagens de produtos
+            document.querySelectorAll('.produto-card img').forEach(img => {
+                if (isMobile) {
+                    const src = img.getAttribute('src');
+                    // Verifica se a imagem não já está na pasta mobile
+                    if (src && src.includes('/images/') && !src.includes('/images/mobile/')) {
+                        img.setAttribute('src', src.replace('/images/', '/images/mobile/'));
+                    }
+                }
+            });
+        }
+
+        // Adiciona os event listeners
+        window.addEventListener('resize', carregarImagensOtimizadas);
+        window.addEventListener('load', carregarImagensOtimizadas);
     </script>
 </body>
 </html>

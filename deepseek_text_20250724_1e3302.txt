@@ -1,0 +1,9 @@
+/ (pasta principal do seu site)
+│
+├── index.html (seu arquivo HTML principal que você já tem)
+├── /images/ (pasta nova que você vai criar)
+│   ├── header-bg.jpg
+│   ├── header-bg-mobile.jpg
+│   ├── logo-maeia.jpg
+│   ├── produto-sem-imagem.jpg
+│   └── sem-imagem.jpg
